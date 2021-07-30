@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
-const request = require(request");
-const requestp = require(request-promise");
+const request = require("request");
+const requestp = require("request-promise");
 const PREFIX = '++'
 const token = 'YOUR TOKEN HERE'
 const client = new Discord.Client();
