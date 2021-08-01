@@ -13,34 +13,35 @@ const conf = require('./config.json').config;
 
 const m = require('./msg/'+conf.language+'.json').msg;
 
-const Discord = require("discord.js");
+const d = require("./PDL");
 const request = require("request");
 const requestp = require("request-promise");
-const client = new Discord.Client();
+const Discord = require('discord.js');
+const c = new Discord.Client();
 
 function sleep(ms) {
   const wakeUpTime = Date.now() + ms;
   while (Date.now() < wakeUpTime) {}
 }
 
-client.on("ready", () => { //봇이 준비되었을때
+d.o.r(c, () => { //봇이 준비되었을때
         console.log('PRWS ready.'); //콘솔에 준비되었다고 띄우고
-        client.user.setActivity('정상작동', { type: "PLAYING" });
+        d.u.sa(c, '정상작동', "PLAYING");
     })
     
-client.on('message', msg => {
-    if (msg.author.equals(client.user) || msg.author.bot) return;
-    if (!msg.content.startsWith(conf.prefix)) return;
-    var args = msg.content.substring(conf.prefix.length + 1).split(" ")
+d.o.m(c, msg => {
+    if (d.m.a(msg).equals(d.u.u(c)) || d.m.b(msg)) return;
+    if (!d.m.c(msg).startsWith(conf.prefix)) return;
+    var args = d.m.c(msg).substring(conf.prefix.length + 1).split(" ")
 
     switch (args[0]) {
         case "cl": // 청소
             if (args[1] == 'test'){
                 for (i=0; i<args[2]; i++){
-                    msg.channel.send(i+1)
+                    d.m.s(msg, i+1)
                     sleep(1000);
                 }
-                msg.channel.send('Done!');
+                d.m.s(msg, 'Done!');
                 break;
             }
             
@@ -51,15 +52,15 @@ client.on('message', msg => {
             if (args[1] < 1)
                 var err ='E302: '+m.error[302]
             if(err)
-                return msg.reply(err);
+                return d.m.r(msg,err);
             var count = args[1]
             
             while (count >= 1){
             if(count > 100) var countTemp = 100;
             else var countTemp = count;
-            msg.channel.bulkDelete(countTemp).catch((err) => {
+            d.m.d.b(msg,countTemp).catch((err) => {
                 console.log(err)
-                return msg.reply('ERROR');
+                return d.m.r(msg, 'ERROR');
             })
             count -= 100
             }
@@ -69,7 +70,7 @@ client.on('message', msg => {
         case "ssh":
           if (!args[1]){
               var err = 'E301: '+m.error[301]
-              return msg.reply(err);
+              return d.m.r(msg,err);
           }
           
           if (msg.author == '466176598651961344') {
@@ -79,14 +80,14 @@ client.on('message', msg => {
              })
           } else
               var err = 'E200: '+m.error[200]
-              msg.reply(err);
+              d.m.r(msg,err);
             break;
 
         case 'nslookup':
             var options = '';
             if (!args[1]){
                 var err = 'E301: '+m.error[301]
-                return msg.reply(err)
+                return d.m.r(msg,err)
             }
             if (args[2] && args[1].startsWith('-')){
                 host = args[2];
@@ -145,7 +146,7 @@ client.on('message', msg => {
                 }
                 result += 'Name: '+host+'\n'
                 result += dnsdata;
-                msg.channel.send(result);
+                d.m.s(msg, result);
                 })
                 
                 })
@@ -160,7 +161,7 @@ client.on('message', msg => {
                 result += 'Non-authoritative answer: \n'
             result += 'Name: '+host+'\n'
             result += dnsdata;
-            msg.channel.send(result);
+            d.m.s(msg, result);
             })
             
             }
@@ -169,32 +170,27 @@ client.on('message', msg => {
         case "rm":
             if (!args[1]) {
                 var err = 'E301: '+m.error[301]
-                return msg.reply(err)
+                return d.m.r(msg,err)
             }
             break;
 
         case "야":
-            if (msg.author == '466176598651961344') msg.reply('예, 각하');
-            if (msg.author != '466176598651961344') msg.reply('뭐 임마');
+            if (d.m.a(msg).id == '466176598651961344') d.m.r(msg,'예, 각하');
+            if (msg.author.id != '466176598651961344') d.m.r(msg,'뭐 임마');
             break;
 
         case "id":
-            msg.channel.send(msg.author);
+            d.m.s(msg, d.m.a(msg).id);
             break;
 
-        case "이미지":
-            if (!args[1]) msg.channel.send('> 사진파일 이름을 입력해주세요.');
-            if (!args[1]) return;
+        case "hash":
+            if (!args[1]){
+                var err = 'E301: '+m.error[301]
+                d.m.r(msg,err)
+            }
+            
 
-            const imgembed = {
-                color: 0x0099ff,
-                title: args[0],
-                image: {
-                    url: 'https://i.prws.kr/' + args[1],
-                },
-            };
-
-            msg.channel.send({ embed: imgembed });
+            
             break;
         case '':
             break;
@@ -213,13 +209,13 @@ client.on('message', msg => {
             var help = '';
             help += '> 도움말\n'
             
-            help += '.sudo cl <count> : 메시지 삭제'
-            help += '.sudo nslookup [options..] <host> : DNS 조회'
-            help += '.sudo -h : 도움말'
-            msg.channel.send(help)
+            help += '.sudo cl <count> : 메시지 삭제\n'
+            help += '.sudo nslookup [options..] <host> : DNS 조회\n'
+            help += '.sudo -h : 도움말\n'
+            d.m.s(msg, help)
             break;
     }
 
 });
 
-client.login(conf.token)
+d.l(c, conf.token)
