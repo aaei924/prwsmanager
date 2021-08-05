@@ -12,12 +12,13 @@ const Discord = require('discord.js');
 const c = new Discord.Client();
 const sql = require('mysql2')
 const cmds = conf.commands
-sql.createConnection({
+cn = sql.createConnection({
     host: conf.DBhost,
     user: conf.DBuser,
     password: conf.DBpass,
     database: conf.DBname
-}).connect();
+})
+cn.connect();
 
 d.o.r(c, () => {
     console.log('PRWS ready.');
