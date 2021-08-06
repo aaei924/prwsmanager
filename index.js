@@ -4,6 +4,7 @@
 
 */
 const conf = require('./config.json').config;
+
 const m = require('./msg/'+conf.language+'.json').msg;
 const d = require("./PDL");
 const request = require("request");
@@ -18,7 +19,6 @@ cn = sql.createConnection({
     password: conf.DBpass,
     database: conf.DBname
 })
-cn.connect();
 
 d.o.r(c, () => {
     console.log('PRWS ready.');
@@ -33,30 +33,25 @@ d.o.o(c, 'message', msg => {
         var exe = require('./lib/'+args[0])
         exe(d,c,m,msg,args,conf,cn)
     }
-
 });
+const writeLog = require('./lib/writeLog')
 d.o.o(c, 'messageUpdate', (ol,ne) => {
-    sqlconn();
-    lib.writeLog(d,c,m,['messageUpdate',ol,ne],cn);
+    if(ol.content !== ne.content)
+        writeLog(d,c,m,['messageUpdate',ol,ne],cn);
 })
 d.o.o(c, 'messageDelete', (ol,ne) => {
-    sqlconn();
-    lib.writeLog(d,c,m,['messageDelete',ol,ne],cn);
+    writeLog(d,c,m,['messageDelete',ol,ne],cn);
 })
 d.o.o(c, 'channelCreate', async ch => {
-    sqlconn();
-    lib.writeLog(d,c,m,['channelCreate',ch],cn)
+    writeLog(d,c,m,['channelCreate',ch],cn)
 })
 d.o.o(c, 'channelDelete', async ch => {
-    sqlconn();
-    lib.writeLog(d,c,m,['channelDelete',ch],cn)
+    writeLog(d,c,m,['channelDelete',ch],cn)
 })
 d.o.o(c, 'guildBanAdd', async (c, ch) => {
-    sqlconn();
-    lib.writeLog(d,c,m,['guildBanAdd',c,ch],cn)
+    writeLog(d,c,m,['guildBanAdd',c,ch],cn)
 })
 d.o.o(c, 'guildMemberRemove', async ch => {
-    sqlconn();
-    lib.writeLog(d,c,m,['guildMemberRemove',ch],cn)
+    writeLog(d,c,m,['guildMemberRemove',ch],cn)
 })
 d.l(c, conf.token)
