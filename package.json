@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "mysql2": "^2.2.5",
+    "node-fetch": "2",
+    "node-jsencrypt": "^1.0.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "ssh-exec": "^2.0.0"
+  },
+  "scripts": {
+    "start": "node go.js"
+  }
+}
